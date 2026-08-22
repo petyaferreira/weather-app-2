@@ -4,6 +4,11 @@ import "./App.css";
 const URL =
   "https://api.open-meteo.com/v1/forecast?latitude=55.6759&longitude=12.5655&hourly=temperature_2m,apparent_temperature&timezone=auto";
 
+const dateFormatter = new Intl.DateTimeFormat("da-DK", {
+  dateStyle: "short",
+  timeStyle: "short",
+});
+
 interface WeatherData {
   latitude: number;
   longitude: number;
@@ -51,7 +56,7 @@ function App() {
       <h1>Weather app</h1>
       {dailyTransformed.map((time) => (
         <p key={time.hour}>
-          <span> Hour: {time.hour}</span>
+          <span> Date and time: {dateFormatter.format(new Date(time.hour))}</span>
           <span> Temp: {time.temperature}</span>
           <span> Fells Like: {time.temperature}</span>
         </p>
