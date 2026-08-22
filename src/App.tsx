@@ -30,37 +30,55 @@ interface WeatherData {
 }
 
 function App() {
+  const [error, setError] = useState<string | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
   useEffect(() => {
     fetch(URL)
-      .then((res) => res.json())
-      .then((json) => setWeatherData(json));
+      .then((res) => {
+        if (!res.ok)
+          throw new Error(`Request failed with status: ${res.status}`);
+        return res.json();
+      })
+      .then((json) => setWeatherData(json))
+      .catch((err) => setError(err.message));
   }, []);
 
+  if (error) return <p>Could not load data</p>;
   if (!weatherData) return <p>Loading...</p>;
 
-  const hourlyData = weatherData.hourly.time;
+  const times = weatherData.hourly.time;
 
-  const transformed = hourlyData.map((hour, i) => ({
-    hour,
+  const transformed = times.map((time, i) => ({
+    time,
     temperature: weatherData.hourly.temperature_2m[i],
-    feelLike: weatherData.hourly.apparent_temperature[i],
+    feelsLike: weatherData.hourly.apparent_temperature[i],
   }));
 
-  const dailyTransformed = transformed.slice(0, 24);
-  console.log(dailyTransformed);
+  const next24Hours = transformed.slice(0, 24);
+  const temperatureUnits = weatherData.hourly_units.temperature_2m;
 
   return (
     <>
       <h1>Weather app</h1>
-      {dailyTransformed.map((time) => (
-        <p key={time.hour}>
-          <span> Date and time: {dateFormatter.format(new Date(time.hour))}</span>
-          <span> Temp: {time.temperature}</span>
-          <span> Fells Like: {time.temperature}</span>
-        </p>
-      ))}
+      <ul>
+        {next24Hours.map((hour) => (
+          <li key={hour.time}>
+            <span>
+              {" "}
+              Date and time: {dateFormatter.format(new Date(hour.time))}
+            </span>
+            <span>
+              {" "}
+              Temp: {hour.temperature} {temperatureUnits}
+            </span>
+            <span>
+              {" "}
+              Feels Like: {hour.feelsLike} {temperatureUnits}
+            </span>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
