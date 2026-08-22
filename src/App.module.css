@@ -1,0 +1,30 @@
+.title {
+  color: red;
+  text-align: center;
+}
+
+.list {
+  padding: 1rem;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.list li {
+  border: 1px gray solid;
+  padding: 1rem;
+}
+
+.date {
+  font-weight: bold;
+  color: forestgreen;
+}
+
+.value {
+  font-weight: bold;
+}
+
+.noBreak {
+  white-space: nowrap;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import styles from "./App.module.css";
 
 const URL =
   "https://api.open-meteo.com/v1/forecast?latitude=55.6759&longitude=12.5655&hourly=temperature_2m,apparent_temperature&timezone=auto";
@@ -60,25 +60,34 @@ function App() {
 
   return (
     <>
-      <h1>Weather app</h1>
-      <ul>
-        {next24Hours.map((hour) => (
-          <li key={hour.time}>
-            <span>
-              {" "}
-              Date and time: {dateFormatter.format(new Date(hour.time))}
-            </span>
-            <span>
-              {" "}
-              Temp: {hour.temperature} {temperatureUnits}
-            </span>
-            <span>
-              {" "}
-              Feels Like: {hour.feelsLike} {temperatureUnits}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <h1 className={styles.title}>Weather app</h1>
+      <section className={styles.container}>
+        <ul className={styles.list}>
+          {next24Hours.map((hour) => (
+            <li key={hour.time}>
+              <p className={styles.date}>
+                {dateFormatter.format(new Date(hour.time))}
+              </p>
+              <p className={styles.noBreak}>
+                Temperature: {""}
+                <span className={styles.value}>
+                  {hour.temperature}
+                  {"\u00A0"}
+                  {temperatureUnits}
+                </span>
+              </p>
+              <p className={styles.noBreak}>
+                Feels Like: {""}
+                <span className={styles.value}>
+                  {hour.feelsLike}
+                  {"\u00A0"}
+                  {temperatureUnits}
+                </span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
     </>
   );
 }
